@@ -1,25 +1,74 @@
-import logo from './logo.svg';
 import './App.css';
+import react,{ Suspense } from 'react';
+import { Redirect, Route, Switch ,BrowserRouter as Router } from "react-router-dom";
+import { connect } from "react-redux";
+const ViewUser = react.lazy(() =>
+  import(/* webpackChunkName: "views-user" */ "./veiws/starter")
+);
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+const MainApp=react.lazy(()=>import('../src/veiws/main/mainApp'));
+
+const AuthRoute = ({ component: Component, authUser, ...rest }) => (
+  
+  <Route
+    {...rest}
+    render={props =>{
+        if(localStorage.getItem("loggedIn") === "true")
+        {
+            return   <Component {...props} />
+        }
+        else
+        {
+          return(
+            <Redirect
+              to={{
+                pathname: "/user/login",
+                state: { from: props.location }
+
+              }}
+            />
+            )
+        }
+    }
+    }
+  />
+);
+class App extends react.Component{
+  render(){
+    
+    const {  loginUser } = this.props;
+    
+    return (
+    
+      <Suspense fallback={<div className="loading" />}>
+          
+              <Router>
+                <Switch>
+                  <AuthRoute
+                    path={'/app'}
+                    authUser={loginUser}
+                    component={MainApp}
+                  />
+                  <Route
+                    path={`/user`}
+
+                    render={props => <ViewUser {...props} />}
+                  />
+                  <Redirect to={'/app'}/>
+                </Switch>
+              </Router>
+            
+    </Suspense>
   );
+  }
 }
 
-export default App;
+
+const mapStateToProps = ({ authUser }) => {
+  const { user: loginUser } = authUser;
+  
+  return { loginUser};
+};
+const mapActionsToProps = {};
+
+export default connect(mapStateToProps, mapActionsToProps)(App);
