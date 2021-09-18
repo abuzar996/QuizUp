@@ -1,5 +1,6 @@
 import react from 'react';
-
+import { changeSelectedMenuHasSubItems } from '../../Redux/menu/actions'; 
+import { connect } from "react-redux";
 
 import  {
     Card,
@@ -29,6 +30,24 @@ class score extends react.Component{
             FirstName:""
         }
     }
+    componentDidUpdate(){
+        this.props.changeSelectedMenuHasSubItems();
+        if(this.props.sidebarOptions!=="")
+        {
+            if(this.props.sidebarOptions==="Veiw Profile")
+            {
+                this.props.history.push('/app/user');
+            }
+            else if(this.props.sidebarOptions==="Select Categories")
+            {
+                this.props.history.push('/app/categories');
+            }
+            else if(this.props.sidebarOptions==="Edit Profile")
+            {
+                this.props.history.push('/app/editUser');
+            }
+        }
+      }
     render(){
         return(
             <Container fluid>
@@ -116,4 +135,11 @@ class score extends react.Component{
         )
     }
 } 
-export default score;
+const mapStateToProps = ({ menu }) => {
+    const { sidebarOptions } = menu;
+    
+    return { sidebarOptions};
+  };
+  
+export default connect(mapStateToProps, {changeSelectedMenuHasSubItems})(score);
+

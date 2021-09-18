@@ -1,5 +1,6 @@
 import react from 'react';
-
+import { changeSelectedMenuHasSubItems } from '../../Redux/menu/actions'; 
+import { connect } from "react-redux";
 import {
     Container,
     Row,
@@ -22,6 +23,24 @@ class Categories extends react.Component{
     {
         console.log(rowData)
     }
+    componentDidUpdate(){
+        this.props.changeSelectedMenuHasSubItems();
+        if(this.props.sidebarOptions!=="")
+        {
+            if(this.props.sidebarOptions==="Veiw Profile")
+            {
+                this.props.history.push('/app/user');
+            }
+            else if(this.props.sidebarOptions==="Edit Profile")
+            {
+                this.props.history.push('/app/editUser');
+            }
+            else if(this.props.sidebarOptions==="View Previous Scores")
+            {
+                this.props.history.push('/app/scores');
+            }
+        }
+      }
     render()
     {
         return (
@@ -70,4 +89,10 @@ class Categories extends react.Component{
         )
     }
 }
-export default Categories;
+const mapStateToProps = ({ menu }) => {
+    const { sidebarOptions } = menu;
+    
+    return { sidebarOptions};
+  };
+  
+export default connect(mapStateToProps, {changeSelectedMenuHasSubItems})(Categories);

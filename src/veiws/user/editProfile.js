@@ -1,6 +1,7 @@
 import react from 'react';
 import UpdatePassword from './updatePassword';
-
+import { changeSelectedMenuHasSubItems } from '../../Redux/menu/actions'; 
+import { connect } from "react-redux";
 import  {
     Card,
     
@@ -38,6 +39,24 @@ class viewProfile extends react.Component{
             PasswordToggle:false
         }
     }
+    componentDidUpdate(){
+        this.props.changeSelectedMenuHasSubItems();
+        if(this.props.sidebarOptions!=="")
+        {
+            if(this.props.sidebarOptions==="Veiw Profile")
+            {
+                this.props.history.push('/app/user');
+            }
+            else if(this.props.sidebarOptions==="Select Categories")
+            {
+                this.props.history.push('/app/categories');
+            }
+            else if(this.props.sidebarOptions==="View Previous Scores")
+            {
+                this.props.history.push('/app/scores');
+            }
+        }
+      }
     TogglePasswordModel=()=>{
         this.setState({PasswordToggle:!this.state.PasswordToggle})
     }
@@ -207,4 +226,11 @@ class viewProfile extends react.Component{
         )
     }
 }
-export default viewProfile;
+
+const mapStateToProps = ({ menu }) => {
+    const { sidebarOptions } = menu;
+    
+    return { sidebarOptions};
+  };
+  
+export default connect(mapStateToProps, {changeSelectedMenuHasSubItems})(viewProfile);

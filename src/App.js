@@ -1,15 +1,11 @@
-import './App.css';
 import react,{ Suspense } from 'react';
 import { Redirect, Route, Switch ,BrowserRouter as Router } from "react-router-dom";
 import { connect } from "react-redux";
-const ViewUser = react.lazy(() =>
-  import(/* webpackChunkName: "views-user" */ "./veiws/starter")
-);
 
+const ViewUser = react.lazy(() =>import( "./veiws/starter"));
 const MainApp=react.lazy(()=>import('../src/veiws/main/mainApp'));
 
-const AuthRoute = ({ component: Component, authUser, ...rest }) => (
-  
+const AuthRoute = ({ component: Component, authUser, ...rest }) => (  
   <Route
     {...rest}
     render={props =>{
@@ -24,18 +20,17 @@ const AuthRoute = ({ component: Component, authUser, ...rest }) => (
               to={{
                 pathname: "/user/login",
                 state: { from: props.location }
-
               }}
             />
-            )
+)
         }
-    }
+      }
     }
   />
 );
 class App extends react.Component{
   render(){
-    
+   // localStorage.setItem("loggedIn", false);
     const {  loginUser } = this.props;
     
     return (

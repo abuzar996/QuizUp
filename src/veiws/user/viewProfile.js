@@ -1,6 +1,7 @@
 import react from 'react';
 
-
+import { changeSelectedMenuHasSubItems } from '../../Redux/menu/actions'; 
+import { connect } from "react-redux";
 import  {
     Card,
     
@@ -35,6 +36,27 @@ class viewProfile extends react.Component{
         this.state={
             name:''
         }
+    }
+    componentDidUpdate(){
+      this.props.changeSelectedMenuHasSubItems();
+      if(this.props.sidebarOptions!=="")
+      {
+        if(this.props.sidebarOptions==="Edit Profile")
+        {
+            this.props.history.push('/app/editUser');
+        }
+        else if(this.props.sidebarOptions==="Select Categories")
+        {
+            this.props.history.push('/app/categories');
+        }
+        else if(this.props.sidebarOptions==="View Previous Scores")
+        {
+            this.props.history.push('/app/scores');
+        }
+     }
+    }
+    onLogoutClicked=()=>{
+        this.props.history.push('/app/editUser');
     }
     render()
     {
@@ -202,11 +224,12 @@ class viewProfile extends react.Component{
                     <Row>
                             
                             <Col style={{display:'flex',justifyContent:'center',alignItems:'center',fontWeight:'bold',fontStyle:'oblique'}}>
-                                <Button>
+                                <Button onClick= {this.onLogoutClicked}>
                                     Edit Profile
                                 </Button>
                             </Col>
-                            <Col style={{display:'flex',justifyContent:'center',alignItems:'center',fontWeight:'bold',fontStyle:'oblique'}}>
+                            <Col 
+                             style={{display:'flex',justifyContent:'center',alignItems:'center',fontWeight:'bold',fontStyle:'oblique'}}>
                                 <Button>
                                     Log Out
                                 </Button>
@@ -222,4 +245,10 @@ class viewProfile extends react.Component{
         )
     }
 }
-export default viewProfile;
+const mapStateToProps = ({ menu }) => {
+    const { sidebarOptions } = menu;
+    
+    return { sidebarOptions};
+  };
+  
+export default connect(mapStateToProps, {changeSelectedMenuHasSubItems})(viewProfile);

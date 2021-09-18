@@ -36,6 +36,11 @@ const Timer=(props)=>{
             props.ToggleTimer()
         }
     }
+    function getDeadlineTime(){
+        let deadline = new Date();
+        deadline.setSeconds(deadline.getSeconds()+60);
+        return deadline;
+    }
     function clearTimer(endtime)
     {
         if(intervalRef.current) clearInterval(intervalRef.current);
@@ -45,20 +50,16 @@ const Timer=(props)=>{
         },1000)
         intervalRef.current=id;
     }
-    function getDeadlineTime(){
-        let deadline = new Date();
-        deadline.setSeconds(deadline.getSeconds()+60);
-        return deadline;
-    }
+
     useEffect(()=>{
         
         setTimer('00:00:60');
-        clearTimer(getDeadlineTime());
+      //  clearTimer(getDeadlineTime());
         
         return ()=>{
             if(intervalRef.current) clearInterval(intervalRef.current)
         }
-        
+        // eslint-disable-line react-hooks/exhaustive-deps
     },[]);
    
     if(props.resetTime===true)

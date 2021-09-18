@@ -8,17 +8,52 @@ import {
     Container,
 
 } from 'reactstrap';
-const menu=[
+import {
+    
+     
+     withRouter
+   }from "react-router-dom";
+
+import { sideBarClicked } from '../Redux/menu/actions'; 
+import { findUserProfile } from '../Redux/auth/actions'; 
+import { connect } from "react-redux";
+
+const Menu=[
     {main:"User",inside:["Veiw Profile","Edit Profile"]},
     {main:"Quiz",inside:["Select Categories"]},
     {main:"Score",inside:["View Previous Scores"]}
 ]
+/* <Route
+                    path={`${this.props.match.url}/user`}
+                    exact
+                    render={props => <UserProfile  />}
+                  />
+                  <Route
+                    path={`${this.props.match.url}/editUser`}
+                    render={props => <UserEditProfile  />}
+                  /> 
+                  <Route
+                    path={`${this.props.match.url}/categories`}
+                    render={props => <Categories  />}
+                  />    
+                  <Route
+                    path={`${this.props.match.url}/scores`}
+                    render={props => <Scores  />}
+                  /> 
+                   <Route
+                    path={`${this.props.match.url}/quizStarter`}*/
 class SideBar extends react.Component{
     constructor(props){
         super (props);
         this.state={
             SideBarOpen:true
         }
+    }
+    componentDidMount()
+    {
+        let email={"email":"khan@gmail.com"};
+        this.props.findUserProfile(email);
+         
     }
     onCloseClicker=()=>{
         this.props.toggleSidebar();
@@ -27,7 +62,7 @@ class SideBar extends react.Component{
         console.log("hello")
     }
     onHandleClick=(data)=>{
-        console.log(data)
+        this.props.sideBarClicked(data);
     }
     render(){
         return(
@@ -61,7 +96,7 @@ class SideBar extends react.Component{
                             </Row>
                         <hr/>
                     
-                        {menu.map((data,i)=>(
+                        {Menu.map((data,i)=>(
                             <Card key={data+i}>
                                 <Row key={data+i+1}style={{display:'flex',justifyContent:'center',alignItems:'center'}}>
                                     <Col key={data+i+2} style={{display:'flex',justifyContent:'center',alignItems:'center'}}>
@@ -85,6 +120,7 @@ class SideBar extends react.Component{
                         ))}
                         <br/>
                         <br/>
+                        
                         <Row style={{display:'flex',justifyContent:'center',alignItems:'center'}}>
                             <Col style={{display:'flex',justifyContent:'center',alignItems:'center'}}>
                                 <legend onClick={this.onLogoutClcikeD} style={{display:'flex',justifyContent:'center',alignItems:'center'}}>Logout</legend>
@@ -96,4 +132,11 @@ class SideBar extends react.Component{
         )
     }
 }
-export default SideBar;
+const mapStateToProps = ({ menu,authUser }) => {
+    const { sidebarOptions } = menu;
+    const { userProfile, loading } = authUser;
+    
+    return { sidebarOptions,userProfile,loading};
+  };
+  
+export default withRouter(connect(mapStateToProps, {sideBarClicked,findUserProfile})(SideBar));

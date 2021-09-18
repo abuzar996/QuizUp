@@ -49,6 +49,7 @@ class Login extends react.Component{
 
     render()
     {
+        console.log(this.props.loading);
         return(
             <Container fluid style={{position:'absolute',width:'100%',height:'100%',backgroundColor:'#000000'}} >
                 <div style={ContainerStyle}>

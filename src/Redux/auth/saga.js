@@ -4,11 +4,12 @@ import axios from "axios";
 
 import {
   LOGIN_USER,
-
+  FIND_USER_PROFILE
 } from "../actions";
 
 import {
   loginUserSuccess,
+  findUserProfileSuccess,
   auth_failure,
  
 } from "./actions";
@@ -36,6 +37,7 @@ function* loginWithEmailPassword({ payload }) {
   if (loginUser.status === 200) {
     localStorage.setItem("tokenId", loginUser.data.token);
     localStorage.setItem("loggedIn", true);
+    localStorage.setItem("email", loginUser.data.email);
     yield put(loginUserSuccess(loginUser));
     history.push("/app");
   }
@@ -45,9 +47,51 @@ function* loginWithEmailPassword({ payload }) {
 }
 export function* watchLoginUser() {
     yield takeEvery(LOGIN_USER, loginWithEmailPassword);
+}
+
+
+
+const findUserProfileAsync = async email =>
+  
+  await axios
+  .post(`${BASE_URL}api/user/find_single_user`, email, {
+    headers: {
+      Authorization: "token " + localStorage.getItem("tokenId"),
+      
+    },
+  })
+  .then(response => response)
+  .catch(error => error.response);
+
+function* findUserProfile(object ) {
+  try{
+    const userProfile = yield call(findUserProfileAsync,object.payload);
+    console.log(userProfile)
+    if (userProfile.status === 200)
+    {
+        yield put(findUserProfileSuccess(userProfile));
+    }
+    else
+    {
+        yield put(auth_failure());
+    }
   }
+  catch(error) 
+  {
+    console.log("error : ", error);
+  }
+}
+
+export function* watchFindUserProfile() {
+    yield takeEvery(FIND_USER_PROFILE, findUserProfile);
+}
+
+
+
+
 export default function* rootSaga() {
     yield all([
       fork(watchLoginUser),
+      fork(watchFindUserProfile),
     ]);
 }  

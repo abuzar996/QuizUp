@@ -3,7 +3,7 @@ import { Route, Switch, Redirect } from "react-router-dom";
 
 
 const Login = React.lazy(() =>
-  import(/* webpackChunkName: "user-login" */ "./login")
+  import(/* webpackChunkName: "user-login" */ "../starter/login")
 );
 
 const User = ({ match }) => {

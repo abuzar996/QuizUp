@@ -40,7 +40,7 @@ class UpdatePassword extends react.Component{
     render(){
         return(
             <div style={{position:'absolute',marginLeft:'40%'}}>
-            <Card style={{margin:'auto',border:'2px solid #000000',display:'flex',justifyContent:'center',alignItems:'center',width:'100%',height:'30%'}}>
+            <Card style={{backgroundColor:'#000000',margin:'auto',border:'2px solid #000000',display:'flex',justifyContent:'center',alignItems:'center',width:'100%',height:'30%'}}>
                 <Row>
                     <h4>
                         Passowrd Change Window
